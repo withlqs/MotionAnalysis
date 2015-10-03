@@ -1,7 +1,7 @@
 package me.getline.motionanalysis;
 
-import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
+import android.support.v7.app.AppCompatActivity;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.MotionEvent;
@@ -13,12 +13,15 @@ import static java.lang.Math.sqrt;
 public class MainActivity extends AppCompatActivity {
     private TextView textview;
     private VelocityTracker vTracker = null;
+    private LogWriter logWriter;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
         textview = (TextView)findViewById(R.id.textview);
+        logWriter = new LogWriter("MotionLog.log", true);
+
     }
 
     private long eventCount;
@@ -26,6 +29,7 @@ public class MainActivity extends AppCompatActivity {
     @Override
     public boolean onTouchEvent(MotionEvent event) {
         int action = event.getAction();
+        String logString;
         switch (action) {
             case MotionEvent.ACTION_DOWN:
                 if (vTracker == null) {
@@ -45,12 +49,15 @@ public class MainActivity extends AppCompatActivity {
                 double nowVelocity = sqrt(xVelocity*xVelocity+yVelocity*yVelocity);
                 meanVelocity += (nowVelocity-meanVelocity)/(eventCount+1);
                 eventCount++;
-                textview.setText("Now Event Count is "+eventCount);
+                logString = "Now Event Count is " + eventCount;
+                textview.setText(logString);
                 break;
             case MotionEvent.ACTION_UP:
             case MotionEvent.ACTION_CANCEL:
                 //vTracker.recycle();
                 textview.setText("Now Event Count is "+eventCount+"\nMean Velocity is "+meanVelocity);
+                logString = "" + meanVelocity;
+                logWriter.write(logString);
                 break;
         }
         //event.recycle();
