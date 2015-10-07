@@ -28,23 +28,28 @@ public class LogWriter {
         logFile = new File(Environment.getExternalStorageDirectory(), fileName);
         Log.i("ExternalPath", logFile.toString());
         dateFormatter = new SimpleDateFormat("yyyy-MM-dd,HH:mm:ss");
+    }
+
+    public void write(String string) {
         try {
             writer = new FileWriter(logFile, isAppend);
         } catch (IOException e) {
             Log.i("LogWriter", e.toString());
         }
-    }
-
-    public void write(String string) {
-        String writeString = dateFormatter.format(new Date()) + " " + string;
+        String writeString = dateFormatter.format(new Date()) + " " + string + "\n";
         try {
             writer.write(writeString);
         } catch (IOException e) {
             Log.i("LogWriter", "Write Error");
         }
+        try {
+            writer.close();
+        } catch (IOException e) {
+            Log.i("LogWriter:write", "close error");
+        }
     }
 
-    protected void finalize() {
+    /*protected void finalize() {
         try {
             super.finalize();
         } catch (Throwable t) {
@@ -55,5 +60,5 @@ public class LogWriter {
         } catch (IOException e) {
             Log.i("LogWriter", "Finalize Error");
         }
-    }
+    }*/
 }
