@@ -7,6 +7,7 @@ import java.io.File;
 import java.io.FileWriter;
 import java.io.IOException;
 import java.text.SimpleDateFormat;
+import java.util.Date;
 
 public class LogWriter {
     private File logFile;
@@ -14,29 +15,30 @@ public class LogWriter {
     private boolean isAppend = true;
     private SimpleDateFormat dateFormatter;
 
-    public void setFileName(String fileName) {
-        logFile = new File(Environment.getExternalStorageDirectory(), fileName);
-        try {
-            writer = new FileWriter(logFile, isAppend);
-        } catch (IOException e) {
-            Log.i("LogWriter", "NotFound");
-        }
-    }
-
     public LogWriter(String fileName) {
         setFileName(fileName);
-        dateFormatter = new SimpleDateFormat("yyyy-MM-dd,HH:mm:ss");
     }
-
 
     public LogWriter(String fileName, boolean appendMode) {
         isAppend = appendMode;
         setFileName(fileName);
     }
 
-    public void write(String string) {
+    public void setFileName(String fileName) {
+        logFile = new File(Environment.getExternalStorageDirectory(), fileName);
+        Log.i("ExternalPath", logFile.toString());
+        dateFormatter = new SimpleDateFormat("yyyy-MM-dd,HH:mm:ss");
         try {
-            writer.write(string);
+            writer = new FileWriter(logFile, isAppend);
+        } catch (IOException e) {
+            Log.i("LogWriter", e.toString());
+        }
+    }
+
+    public void write(String string) {
+        String writeString = dateFormatter.format(new Date()) + " " + string;
+        try {
+            writer.write(writeString);
         } catch (IOException e) {
             Log.i("LogWriter", "Write Error");
         }
