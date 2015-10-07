@@ -6,6 +6,7 @@ import android.view.Menu;
 import android.view.MenuItem;
 import android.view.MotionEvent;
 import android.view.VelocityTracker;
+import android.widget.CheckBox;
 import android.widget.TextView;
 
 import static java.lang.Math.sqrt;
@@ -14,6 +15,9 @@ public class MainActivity extends AppCompatActivity {
     private TextView textview;
     private VelocityTracker vTracker = null;
     private LogWriter logWriter;
+    private CheckBox rewriteLogCheckBox = null;
+    private long eventCount;
+    private double meanVelocity;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -21,11 +25,9 @@ public class MainActivity extends AppCompatActivity {
         setContentView(R.layout.activity_main);
         textview = (TextView)findViewById(R.id.textview);
         logWriter = new LogWriter("MotionLog.log", true);
-
+        rewriteLogCheckBox = (CheckBox) findViewById(R.id.checkBox);
     }
 
-    private long eventCount;
-    private double meanVelocity;
     @Override
     public boolean onTouchEvent(MotionEvent event) {
         int action = event.getAction();

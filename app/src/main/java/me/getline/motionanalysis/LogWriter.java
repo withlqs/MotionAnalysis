@@ -12,31 +12,36 @@ import java.util.Date;
 public class LogWriter {
     private File logFile;
     private FileWriter writer;
-    private boolean isAppend = true;
+    private boolean appendMode;
     private SimpleDateFormat dateFormatter;
 
-    public LogWriter(String fileName) {
+    public LogWriter(String fileName, boolean isAppend) {
+        appendMode = isAppend;
         setFileName(fileName);
     }
 
-    public LogWriter(String fileName, boolean appendMode) {
-        isAppend = appendMode;
-        setFileName(fileName);
-    }
-
-    public void setFileName(String fileName) {
+    private void setFileName(String fileName) {
         logFile = new File(Environment.getExternalStorageDirectory(), fileName);
         Log.i("ExternalPath", logFile.toString());
         dateFormatter = new SimpleDateFormat("yyyy-MM-dd,HH:mm:ss");
+        if (appendMode) {
+            write("Init log file", true);
+        } else {
+            write("Init log file", false);
+        }
     }
 
-    public void write(String string) {
+    private String getFormattedDate() {
+        return dateFormatter.format(new Date());
+    }
+
+    private void write(String string, boolean isAppend) {
         try {
             writer = new FileWriter(logFile, isAppend);
         } catch (IOException e) {
             Log.i("LogWriter", e.toString());
         }
-        String writeString = dateFormatter.format(new Date()) + " " + string + "\n";
+        String writeString = getFormattedDate() + "," + string + "\n";
         try {
             writer.write(writeString);
         } catch (IOException e) {
@@ -47,6 +52,11 @@ public class LogWriter {
         } catch (IOException e) {
             Log.i("LogWriter:write", "close error");
         }
+
+    }
+
+    public void write(String string) {
+        write(string, true);
     }
 
     /*protected void finalize() {
