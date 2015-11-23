@@ -48,7 +48,8 @@ public class MainActivity extends AppCompatActivity {
                 double nowVelocity = sqrt(xVelocity*xVelocity+yVelocity*yVelocity);
                 meanVelocity += (nowVelocity-meanVelocity)/(eventCount+1);
                 eventCount++;
-                logString = "Now Event Count is " + eventCount;
+                logString = "Now Event Count is " + eventCount + " X is " + event.getX() + " Y is " + event.getY();
+                logString += "\nNow Size is " + event.getSize();
                 textview.setText(logString);
                 break;
             case MotionEvent.ACTION_UP:
