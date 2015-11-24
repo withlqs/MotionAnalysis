@@ -15,8 +15,13 @@ public class MotionCalculator {
     private double minSize;
     private double sumX;
     private double sumY;
+    private double sumSize;
 
     public MotionCalculator() {
+        init();
+    }
+
+    public void init() {
         maxX = -1.0;
         minX = 10000;
         maxY = -1.0;
@@ -25,6 +30,8 @@ public class MotionCalculator {
         minSize = 10000;
         sumX = 0;
         sumY = 0;
+        sumSize = 0;
+        pointList.clear();
     }
 
     public double getMeanX() {
@@ -33,6 +40,10 @@ public class MotionCalculator {
 
     public double getMeanY() {
         return sumY / pointList.size();
+    }
+
+    public double getMeanSize() {
+        return sumSize / pointList.size();
     }
 
     public double getNormalX(double x) {
@@ -49,9 +60,29 @@ public class MotionCalculator {
 
     public double getXSecondaryMoment() {
         double normalMeanX = getNormalX(getMeanX());
+        double sum = 0.0;
         for (MotionPoint point : pointList) {
+            sum += (getNormalX(point.getX()) - normalMeanX) * (getNormalX(point.getX()) - normalMeanX);
         }
-        return 0.0;
+        return sum;
+    }
+
+    public double getYSecondaryMoment() {
+        double normalMeanY = getNormalY(getMeanY());
+        double sum = 0.0;
+        for (MotionPoint point : pointList) {
+            sum += (getNormalY(point.getY()) - normalMeanY) * (getNormalY(point.getY()) - normalMeanY);
+        }
+        return sum;
+    }
+
+    public double getSizeSecondaryMoment() {
+        double normalMeanSize = getNormalSize(getMeanSize());
+        double sum = 0.0;
+        for (MotionPoint point : pointList) {
+            sum += (getNormalSize(point.getSize()) - normalMeanSize) * (getNormalSize(point.getSize()) - normalMeanSize);
+        }
+        return sum;
     }
 
     public void addPoint(MotionPoint point) {
@@ -63,6 +94,7 @@ public class MotionCalculator {
         minSize = Math.min(minSize, point.getSize());
         sumX += point.getX();
         sumY += point.getY();
+        sumSize += point.getSize();
         pointList.add(point);
     }
 }

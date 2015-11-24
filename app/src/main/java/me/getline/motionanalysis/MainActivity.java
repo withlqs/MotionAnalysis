@@ -11,6 +11,7 @@ import android.widget.TextView;
 import static java.lang.Math.sqrt;
 
 public class MainActivity extends AppCompatActivity {
+    MotionCalculator calculator = new MotionCalculator();
     private TextView textview;
     private VelocityTracker vTracker = null;
     private LogWriter logWriter;
@@ -36,11 +37,13 @@ public class MainActivity extends AppCompatActivity {
                 } else {
                     vTracker.clear();
                 }
+                calculator.init();
                 eventCount = 0;
                 meanVelocity = 0.0;
                 vTracker.addMovement(event);
                 break;
             case MotionEvent.ACTION_MOVE:
+                calculator.addPoint(new MotionPoint(event));
                 vTracker.addMovement(event);
                 vTracker.computeCurrentVelocity(1000);
                 double xVelocity = vTracker.getXVelocity();
@@ -48,16 +51,16 @@ public class MainActivity extends AppCompatActivity {
                 double nowVelocity = sqrt(xVelocity*xVelocity+yVelocity*yVelocity);
                 meanVelocity += (nowVelocity-meanVelocity)/(eventCount+1);
                 eventCount++;
-                logString = "Now Event Count is " + eventCount + " X is " + event.getX() + " Y is " + event.getY();
-                logString += "\nNow Size is " + event.getSize();
-                textview.setText(logString);
+//                logString = "Now Event Count is " + eventCount + " X is " + event.getX() + " Y is " + event.getY();
+//                logString += "\nNow Size is " + event.getSize();
+//                textview.setText(logString);
                 break;
             case MotionEvent.ACTION_UP:
             case MotionEvent.ACTION_CANCEL:
                 //vTracker.recycle();
-                textview.setText("Now Event Count is "+eventCount+"\nMean Velocity is "+meanVelocity);
-                logString = "" + meanVelocity;
-                logWriter.write(logString);
+                textview.setText(textview.getText() + "\nX:" + calculator.getXSecondaryMoment() + " Y:" + calculator.getYSecondaryMoment() + " Size:" + calculator.getSizeSecondaryMoment());
+//                logString = "" + meanVelocity;
+//                logWriter.write(logString);
                 break;
         }
         //event.recycle();
