@@ -41,7 +41,7 @@ public class MotionTimeMonitor {
     }
 
     public double getNormalDuration(long time) {
-        return (time - minDuration) / (maxDuration - minDuration);
+        return (1.0 * (time - minDuration)) / (maxDuration - minDuration);
     }
 
     public double getDistance(MotionTimeMonitor motionTimeMonitor) {
@@ -50,7 +50,7 @@ public class MotionTimeMonitor {
             return getThreshold() + 1;
         }
         double diff = 0;
-        for (int i = 0; i < size - 1; i++) {
+        for (int i = 0; i < size; i++) {
             MotionTimer a = motionTimeList.get(i);
             MotionTimer b = motionTimeMonitor.motionTimeList.get(i);
             diff += Math.abs(getNormalDuration(a.getDuration()) - motionTimeMonitor.getNormalDuration(b.getDuration()));

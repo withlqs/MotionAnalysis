@@ -6,17 +6,31 @@ import android.view.Menu;
 import android.view.MenuItem;
 import android.view.MotionEvent;
 import android.view.VelocityTracker;
+import android.view.View;
+import android.widget.Button;
 import android.widget.TextView;
 
 import static java.lang.Math.sqrt;
 
 public class MainActivity extends AppCompatActivity {
     MotionCalculator calculator = new MotionCalculator();
+    MotionTimeMonitor monitor = new MotionTimeMonitor();
+    MotionTimeMonitor standard;
     private TextView textview;
     private VelocityTracker vTracker = null;
     private LogWriter logWriter;
     private long eventCount;
     private double meanVelocity;
+
+    private Button define;
+    private Button compare;
+    private Button newMonitor;
+    private long startTime, endTime;
+
+    public void defineStandard() {
+        standard = monitor;
+        monitor = new MotionTimeMonitor();
+    }
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -24,6 +38,30 @@ public class MainActivity extends AppCompatActivity {
         setContentView(R.layout.activity_main);
         textview = (TextView)findViewById(R.id.textview);
         logWriter = new LogWriter("MotionLog.log", true);
+        define = (Button) findViewById(R.id.define);
+        compare = (Button) findViewById(R.id.compare);
+        newMonitor = (Button) findViewById(R.id.new_monitor);
+
+        newMonitor.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                monitor = new MotionTimeMonitor();
+            }
+        });
+        define.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                defineStandard();
+            }
+        });
+        compare.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                double diff = monitor.getDistance(standard);
+                textview.setText("" + diff);
+                monitor = new MotionTimeMonitor();
+            }
+        });
     }
 
     @Override
@@ -41,6 +79,7 @@ public class MainActivity extends AppCompatActivity {
                 eventCount = 0;
                 meanVelocity = 0.0;
                 vTracker.addMovement(event);
+                startTime = event.getEventTime();
                 break;
             case MotionEvent.ACTION_MOVE:
                 calculator.addPoint(new MotionPoint(event));
@@ -58,10 +97,10 @@ public class MainActivity extends AppCompatActivity {
             case MotionEvent.ACTION_UP:
             case MotionEvent.ACTION_CANCEL:
                 //vTracker.recycle();
-                textview.setText(textview.getText() + "\nX:" + calculator.getXSecondaryMoment() + " Y:" + calculator.getYSecondaryMoment() + " Size:" + calculator.getSizeSecondaryMoment());
-                textview.setText(textview.getText() + "\n" + event.getEventTime() / (1000));
-//                logString = "" + meanVelocity;
-//                logWriter.write(logString);
+                //textview.setText(textview.getText() + "\nX:" + calculator.getXSecondaryMoment() + " Y:" + calculator.getYSecondaryMoment() + " Size:" + calculator.getSizeSecondaryMoment());
+                //textview.setText(textview.getText() + "\n" + event.getEventTime() / (1000));
+                endTime = event.getEventTime();
+                monitor.addMotionTime(new MotionTimer(startTime, endTime));
                 break;
         }
         //event.recycle();
