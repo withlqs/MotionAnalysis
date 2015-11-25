@@ -59,6 +59,7 @@ public class MainActivity extends AppCompatActivity {
             case MotionEvent.ACTION_CANCEL:
                 //vTracker.recycle();
                 textview.setText(textview.getText() + "\nX:" + calculator.getXSecondaryMoment() + " Y:" + calculator.getYSecondaryMoment() + " Size:" + calculator.getSizeSecondaryMoment());
+                textview.setText(textview.getText() + "\n" + event.getEventTime() / (1000));
 //                logString = "" + meanVelocity;
 //                logWriter.write(logString);
                 break;
