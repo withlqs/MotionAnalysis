@@ -45,12 +45,14 @@ public class MainActivity extends AppCompatActivity {
         newMonitor.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
+                textview.setText("New Monitor");
                 monitor = new MotionTimeMonitor();
             }
         });
         define.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
+                textview.setText("New Standard");
                 defineStandard();
             }
         });
@@ -58,11 +60,11 @@ public class MainActivity extends AppCompatActivity {
             @Override
             public void onClick(View v) {
                 double diff = monitor.getDistance(standard);
-                textview.setText("" + diff + " " + MotionTimeMonitor.getThreshold());
+                textview.setText("Difference: " + diff + "\nThreshold: " + MotionTimeMonitor.getThreshold() + "\nConclusion: ");
                 if (MotionTimeMonitor.thresholdCompare(diff)) {
-                    textview.setText(textview.getText() + "\nYes");
+                    textview.setText(textview.getText() + "Yes");
                 } else {
-                    textview.setText(textview.getText() + "\nNo");
+                    textview.setText(textview.getText() + "No");
                 }
                 monitor = new MotionTimeMonitor();
             }

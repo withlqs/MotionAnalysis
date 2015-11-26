@@ -1,13 +1,15 @@
 package me.getline.motionanalysis;
 
 import java.util.ArrayList;
+import java.util.Random;
 
 /**
  * Created by apple on 2015/11/25.
  */
 public class MotionTimeMonitor {
-    public static double threshold;
+    public static double threshold = 1.0;
     public ArrayList<MotionTimer> motionTimeList = new ArrayList<>();
+    Random random = new Random();
     private long minDuration;
     private long maxDuration;
 
@@ -40,7 +42,6 @@ public class MotionTimeMonitor {
         motionTimeList.clear();
         minDuration = Long.MAX_VALUE;
         maxDuration = Long.MIN_VALUE;
-        threshold = 1;
     }
 
     public void addMotionTime(MotionTimer motionTime) {
@@ -56,7 +57,7 @@ public class MotionTimeMonitor {
     public double getDistance(MotionTimeMonitor motionTimeMonitor) {
         int size = getMotionTimerSize();
         if (size != motionTimeMonitor.getMotionTimerSize()) {
-            return getThreshold() + 1;
+            return getThreshold() + random.nextDouble() * 5.0;
         }
         double diff = 0;
         for (int i = 0; i < size; i++) {
