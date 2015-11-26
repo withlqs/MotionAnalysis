@@ -58,7 +58,12 @@ public class MainActivity extends AppCompatActivity {
             @Override
             public void onClick(View v) {
                 double diff = monitor.getDistance(standard);
-                textview.setText("" + diff);
+                textview.setText("" + diff + " " + MotionTimeMonitor.getThreshold());
+                if (MotionTimeMonitor.thresholdCompare(diff)) {
+                    textview.setText(textview.getText() + "\nYes");
+                } else {
+                    textview.setText(textview.getText() + "\nNo");
+                }
                 monitor = new MotionTimeMonitor();
             }
         });

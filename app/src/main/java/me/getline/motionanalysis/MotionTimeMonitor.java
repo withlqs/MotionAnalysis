@@ -23,6 +23,15 @@ public class MotionTimeMonitor {
         MotionTimeMonitor.threshold = threshold;
     }
 
+    public static boolean thresholdCompare(double _threshold) {
+        if (_threshold < threshold) {
+            threshold = threshold * 0.95 + (_threshold + threshold / 2.0) * 0.05;
+            return true;
+        } else {
+            return false;
+        }
+    }
+
     public int getMotionTimerSize() {
         return motionTimeList.size();
     }
@@ -57,4 +66,5 @@ public class MotionTimeMonitor {
         }
         return diff;
     }
+
 }
